@@ -21,49 +21,7 @@ services:
     ports:
       - "6379:6379"
 
-  web:
-    build: .
-    container_name: django_app
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/app
-    ports:
-      - "8000:8000"
-    depends_on:
-      - postgres
-      - redis
-    environment:
-      DB_NAME: siem_db
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_HOST: postgres
-      DB_PORT: 5432
-      REDIS_URL: redis://redis:6379/0
 
-  celery_worker:
-    build: .
-    container_name: celery_worker
-    command: celery -A backend worker -l info
-    volumes:
-      - .:/app
-    depends_on:
-      - web
-      - redis
-      - postgres
-    environment:
-      REDIS_URL: redis://redis:6379/0
-
-  celery_beat:
-    build: .
-    container_name: celery_beat
-    command: celery -A backend beat -l info
-    volumes:
-      - .:/app
-    depends_on:
-      - redis
-      - postgres
-    environment:
-      REDIS_URL: redis://redis:6379/0
 
 volumes:
   postgres_data:
