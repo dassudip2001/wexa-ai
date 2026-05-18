@@ -4,6 +4,7 @@ import "./globals.css";
 import TanstackProviders from "@/context/tanstack";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/context/auth-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,10 +33,12 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <TanstackProviders>
-          <TooltipProvider>
-            <Toaster />
-            {children}
-          </TooltipProvider>
+          <AuthProvider>
+            <TooltipProvider>
+              <Toaster />
+              {children}
+            </TooltipProvider>
+          </AuthProvider>
         </TanstackProviders>
       </body>
     </html>

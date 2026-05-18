@@ -21,6 +21,9 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { EllipsisVerticalIcon, CircleUserRoundIcon, CreditCardIcon, BellIcon, LogOutIcon } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useAuthStore } from "@/store/authStore"
+import { useUserStore } from "@/store/userStore"
 
 export function NavUser({
   user,
@@ -32,6 +35,15 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const router = useRouter()
+  const logout = useAuthStore((state) => state.logout)
+  const clearUser = useUserStore((state) => state.clearUser)
+
+  const handleLogout = async () => {
+    await logout()
+    clearUser()
+    router.push("/login")
+  }
 
   return (
     <SidebarMenu>
@@ -75,26 +87,9 @@ export function NavUser({
                 </div>
               </div>
             </DropdownMenuLabel>
+            
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <CircleUserRoundIcon
-                />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCardIcon
-                />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <BellIcon
-                />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
               <LogOutIcon
               />
               Log out

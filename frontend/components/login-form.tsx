@@ -25,6 +25,9 @@ import { AxiosError } from "axios"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 
+import { useAuthStore } from "@/store/authStore"
+import { useUserStore } from "@/store/userStore"
+
 const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
   password: z.string().min(1, "Password is required"),
@@ -43,17 +46,35 @@ export function LoginForm({
   
   const loginMutation = useMutation({
     mutationFn: async (data: LoginSchema) => {
-      const response = await api.post('/api/login/', data);
+      const response = await api.post('/login/', data);
       return response.data;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       toast.success("Login successful!");
+      
+      const { setTokens } = useAuthStore.getState();
+      const { setUser } = useUserStore.getState();
+
       if (data.access) {
+        setTokens(data.access, data.refresh);
         document.cookie = `access_token=${data.access}; path=/; max-age=86400; SameSite=Lax`;
       }
       if (data.refresh) {
         document.cookie = `refresh_token=${data.refresh}; path=/; max-age=604800; SameSite=Lax`;
       }
+
+      // Populate user details directly if returned from login, or fetch from get-user
+      if (data.id && data.email) {
+        setUser({ id: data.id, email: data.email, first_name: data.first_name, last_name: data.last_name });
+      } else {
+        try {
+          const userRes = await api.get('/get-user');
+          setUser(userRes.data);
+        } catch (e) {
+          console.error("Failed to fetch user details", e);
+        }
+      }
+
       router.push("/dashboard");
     },
     onError: (error: AxiosError<{ detail?: string }>) => {

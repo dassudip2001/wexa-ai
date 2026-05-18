@@ -13,6 +13,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarRail,
 } from "@/components/ui/sidebar";
 import {
   LayoutDashboardIcon,
@@ -22,6 +23,7 @@ import {
   User2,
 } from "lucide-react";
 import Link from "next/link";
+import { useUserStore } from "@/store/userStore";
 
 const data = {
   user: {
@@ -53,8 +55,16 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useUserStore();
+
+  const navUser = {
+    name: user ? `${user.first_name} ${user.last_name}` : "User",
+    email: user ? user.email : "",
+    avatar: "",
+  };
+
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -76,8 +86,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={navUser} />
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   );
 }
