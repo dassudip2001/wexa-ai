@@ -38,3 +38,13 @@ class Membership(models.Model):
 
     class Meta:
         unique_together = ("user", "organization")
+
+
+
+class Invitation(models.Model):
+
+    email = models.EmailField()
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    role = models.CharField(max_length=20)
+    token = models.UUIDField(default=uuid.uuid4)
+    accepted = models.BooleanField(default=False)
