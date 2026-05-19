@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -16,7 +17,7 @@ class InviteUserView(APIView):
 
         invite = Invitation.objects.create(
             email=request.data["email"],
-            role=request.data["role"],
+            role="VIEWER",
             organization=org
         )
 
@@ -24,9 +25,10 @@ class InviteUserView(APIView):
 
 
 class AcceptInviteView(APIView):
-
-    def post(self, request, token):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, token):
         invite = Invitation.objects.get(token=token)
+        print(".............",invite)
 
         Membership.objects.create(
             user=request.user,
