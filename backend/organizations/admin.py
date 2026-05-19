@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from organizations.models import Organization,Membership,Invitation
+from organizations.models import Organization, Membership, Invitation, APIKey
 
 
 # Register your models here.
@@ -23,3 +23,9 @@ class InvitationAdmin(admin.ModelAdmin):
     list_display = ("email", "organization", "role", "token", "accepted")
     list_filter = ("role", "organization", "accepted")
     search_fields = ("email",)
+
+@admin.register(APIKey)
+class ApiKeyAdmin(admin.ModelAdmin):
+    list_display = ("id", "organization", "name", "key", "is_active", "created_at")
+    list_filter = ("is_active", "organization")
+    search_fields = ("name", "key")

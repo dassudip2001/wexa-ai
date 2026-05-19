@@ -1,9 +1,8 @@
 import uuid
 from django.db import models
-from django.conf import settings
 from datetime import timedelta
 from django.utils import timezone
-
+import secrets
 
 class Organization(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
@@ -59,3 +58,26 @@ class Invitation(models.Model):
 
     def is_valid(self):
         return not self.accepted and timezone.now() < self.expires_at
+
+
+class APIKey(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    organization = models.ForeignKey(
+        Organization,
+        on_delete=models.CASCADE,
+        related_name="api_keys"
+    )
+
+    name = models.CharField(max_length=100)
+
+    key = models.CharField(max_length=64, unique=True, editable=False)
+
+    is_active = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if not self.key:
+            self.key = secrets.token_hex(32)
+        super().save(*args, **kwargs)

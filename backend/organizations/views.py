@@ -31,14 +31,18 @@ class InviteByEmail(APIView):
         org = get_user_organization(request.user)
         invite = Invitation.objects.filter(
             organization=org,
-            email=request.user,
+            email=request.user.email,
             accepted=False
         ).first()
-
+        print(".................",invite)
         if not invite:
             return Response({"message": "No invite available"}, status=200)
 
-        return Response({"token": invite})
+        return Response({
+            "token": str(invite.token),
+            "role": invite.role,
+            "organization": invite.organization.name
+        })
 
 class AcceptInviteView(APIView):
     permission_classes = [IsAuthenticated]
