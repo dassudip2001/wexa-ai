@@ -1,11 +1,10 @@
 from django.db.models.aggregates import Count
-from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.utils import timezone
 from events.models import Event
-from organizations.models import  Organization, Membership
+from organizations.models import Membership
 from datetime import timedelta
 
 
@@ -14,7 +13,6 @@ class DashboardStatsView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-
         membership = Membership.objects.filter(
             user=request.user
         ).first()
@@ -24,16 +22,12 @@ class DashboardStatsView(APIView):
 
         org = membership.organization
 
-        # ------------------------
         # Total Events
-        # ------------------------
         total_events = Event.objects.filter(
             organization=org
         ).count()
 
-        # ------------------------
         # Today Events
-        # ------------------------
         today = timezone.now().date()
 
         today_events = Event.objects.filter(
@@ -41,9 +35,7 @@ class DashboardStatsView(APIView):
             created_at__date=today
         ).count()
 
-        # ------------------------
         # Last 7 Days Trend
-        # ------------------------
         last_week = timezone.now() - timedelta(days=7)
 
         events_last_7_days = (
@@ -57,9 +49,7 @@ class DashboardStatsView(APIView):
             .order_by("day")
         )
 
-        # ------------------------
         # Top Event Types
-        # ------------------------
         top_events = (
             Event.objects.filter(organization=org)
             .values("event_name")
@@ -67,9 +57,7 @@ class DashboardStatsView(APIView):
             .order_by("-total")[:5]
         )
 
-        # ------------------------
         # Recent Events
-        # ------------------------
         recent_events = Event.objects.filter(
             organization=org
         ).order_by("-created_at")[:5].values(

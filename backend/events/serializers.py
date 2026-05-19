@@ -6,3 +6,9 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ["event_name", "properties"]
+
+
+class EventAllSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        exclude = ["organization"]
