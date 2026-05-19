@@ -44,10 +44,11 @@ class SignUpSerializer(serializers.Serializer):
                                             password))
 
         # create organization
-        org = Organization.objects.create(
-            name=organization_name,
-            slug=organization_name.lower().replace(" ", "-")
-        )
+        if organization_name:
+            org = Organization.objects.create(
+                name=organization_name,
+                slug=organization_name.lower().replace(" ", "-")
+            )
 
         # owner member
         Membership.objects.create(
