@@ -27,6 +27,7 @@ import { useRouter } from "next/navigation"
 
 import { useAuthStore } from "@/store/authStore"
 import { useUserStore } from "@/store/userStore"
+import Link from "next/link";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -137,7 +138,7 @@ export function LoginForm({
                   Login with Google
                 </Button> */}
                 <FieldDescription className="text-center">
-                  Don&apos;t have an account? <a href="#">Sign up</a>
+                  Don&apos;t have an account? <Link href="/signup">Sign up</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>

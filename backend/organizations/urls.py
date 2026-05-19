@@ -5,5 +5,5 @@ from organizations.views import InviteUserView, AcceptInviteView
 
 urlpatterns = [
     path("invite", InviteUserView.as_view()),
-    path("accept:<str:token>", AcceptInviteView.as_view())
+    path("accept/<str:token>", AcceptInviteView.as_view())
 ]

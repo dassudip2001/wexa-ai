@@ -1,8 +1,13 @@
+from django.contrib.auth import get_user_model
 from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from accounts.serializers import SignUpSerializer
+
+User = get_user_model()
 
 
 # Create your views here.
@@ -16,6 +21,25 @@ class LogoutView(APIView):
         except Exception:
             return Response({"error": "Invalid token"}, status=400)
         return Response({"message": "Logged out"})
+
+
+# register user
+# create user
+# register organization
+# create organization membership
+class SignUpView(APIView):
+    authentication_classes = []
+    permission_classes = []
+    def post(self,request):
+        serializer=SignUpSerializer(data=request.data)
+        if serializer.is_valid():
+            user=serializer.save()
+            refresh=RefreshToken.for_user(user)
+            return Response({
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+            })
+        return Response(serializer.errors,status=400)
 
 
 class GetUserView(APIView):

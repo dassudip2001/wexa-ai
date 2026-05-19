@@ -5,7 +5,7 @@ services:
     container_name: postgres_db
     restart: always
     environment:
-      POSTGRES_DB: siem_db
+      POSTGRES_DB: analytics_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
