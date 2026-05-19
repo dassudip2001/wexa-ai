@@ -9,7 +9,7 @@ __pycache__/
 
 # Exclude local database and secrets
 db.sqlite3
-.env
+#.env
 
 # Exclude version control and IDE files
 .git/
