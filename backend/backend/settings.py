@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-8q1+f&$jn+9j6&z995z*zm8pf=auva1i-b8o6bthaz(&_277ap
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*','http://localhost:3000','wexa-am85.onrender.com','https://wexa-ai-psi.vercel.app']
+ALLOWED_HOSTS = ['*', 'http://localhost:3000', 'wexa-am85.onrender.com', 'https://wexa-ai-psi.vercel.app']
 
 # Application definition
 
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "dashboards",
     "alerts",
     "reports",
+    "common",
 ]
 
 MIDDLEWARE = [
