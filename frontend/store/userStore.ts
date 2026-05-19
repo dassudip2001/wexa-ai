@@ -5,6 +5,14 @@ export interface User {
   email: string;
   first_name: string;
   last_name: string;
+  organizations?: UserOrganization[];
+
+}
+
+export interface UserOrganization {
+  organization_id: string;
+  organization_name: string;
+  role: string;
 }
 
 interface UserState {

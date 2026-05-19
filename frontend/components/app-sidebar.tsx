@@ -56,6 +56,8 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useUserStore();
+  console.log("sidebar",user);
+  
 
   const navUser = {
     name: user ? `${user.first_name} ${user.last_name}` : "User",
