@@ -5,7 +5,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from accounts.serializers import SignUpSerializer
+from accounts.serializers import SignUpSerializer, MembershipSerializer
+from organizations.models import Membership
 
 User = get_user_model()
 
@@ -47,10 +48,20 @@ class GetUserView(APIView):
 
     def get(self, request):
         user = request.user
+
+        memberships = Membership.objects.filter(
+            user=user
+        ).select_related("organization")
+
+        org_data = MembershipSerializer(
+            memberships,
+            many=True
+        ).data
+
         return Response({
             "id": user.id,
             "email": user.email,
             "first_name": user.first_name,
-            "last_name": user.last_name
-
+            "last_name": user.last_name,
+            "organizations": org_data
         })
