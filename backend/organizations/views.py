@@ -24,6 +24,22 @@ class InviteUserView(APIView):
         return Response({"invite_token": invite.token})
 
 
+# Get invite by emailId
+class InviteByEmail(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        org = get_user_organization(request.user)
+        invite = Invitation.objects.filter(
+            organization=org,
+            email=request.user,
+            accepted=False
+        ).first()
+
+        if not invite:
+            return Response({"message": "No invite available"}, status=200)
+
+        return Response({"token": invite})
+
 class AcceptInviteView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, token):

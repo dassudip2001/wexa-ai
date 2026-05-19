@@ -46,11 +46,11 @@ const data = {
       icon: <Logs />,
     },
     {
-      name: "Users",
-      url: "/users",
+      name: "Invites",
+      url: "/invites",
       icon: <User2 />,
     },
-    
+
   ],
 };
 
