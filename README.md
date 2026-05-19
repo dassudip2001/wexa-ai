@@ -1,6 +1,8 @@
 # wexa-ai
 
 A full-stack web application featuring a modern React frontend (Next.js) and a robust Python backend (Django).
+<img width="485" height="727" alt="image" src="https://github.com/user-attachments/assets/f64d2e9e-8611-422d-aa1b-f9fb81ddaf43" />
+
 
 ## 🚀 Tech Stack
 
