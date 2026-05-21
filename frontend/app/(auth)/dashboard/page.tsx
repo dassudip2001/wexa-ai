@@ -14,6 +14,7 @@ export default function Page() {
       const response = await api.get("/dashboard/stats/");
       return response.data;
     },
+    
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     refetchInterval: 60000, // 1 minute

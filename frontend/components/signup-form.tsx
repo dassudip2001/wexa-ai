@@ -216,7 +216,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
             {step === 2 && (
               <FieldGroup className="animate-in fade-in slide-in-from-right-4 duration-300">
                 <Field>
-                  <FieldLabel htmlFor="organization_name">Organization Name</FieldLabel>
+                  <FieldLabel htmlFor="organization_name">Organization Name(Optional)</FieldLabel>
                   <Input
                     id="organization_name"
                     type="text"
@@ -249,7 +249,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
                   {fields.map((field, index) => (
                     <Field key={field.id}>
                       <FieldLabel htmlFor={`invites.${index}.email`} className={index !== 0 ? "sr-only" : ""}>
-                        Team Member Email
+                        Team Member Email(Optional)
                       </FieldLabel>
                       <div className="flex gap-2">
                         <Input

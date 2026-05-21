@@ -19,10 +19,20 @@ interface UserState {
   user: User | null;
   setUser: (user: User) => void;
   clearUser: () => void;
+  hasRole: (roles: string[]) => boolean;
 }
 
-export const useUserStore = create<UserState>((set) => ({
+export const useUserStore = create<UserState>((set,get) => ({
   user: null,
   setUser: (user) => set({ user }),
   clearUser: () => set({ user: null }),
+  hasRole: (roles: string[]) => {
+    const user = get().user;
+
+    if (!user?.organizations) return false;
+
+    return user.organizations.some((org) =>
+      roles.includes(org.role)
+    );
+  },
 }));
