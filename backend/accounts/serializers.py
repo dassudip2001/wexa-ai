@@ -28,14 +28,17 @@ class MembershipSerializer(serializers.ModelSerializer):
 class SignUpSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
-    organization_name = serializers.CharField()
+    organization_name = serializers.CharField(
+        required=False,
+        allow_blank=True
+    )
     username = serializers.CharField()
 
     def create(self, validated_data):
         email = validated_data['email']
         password = validated_data['password']
         username = validated_data['username']
-        organization_name = validated_data['organization_name']
+        organization_name = validated_data.get("organization_name")
 
         # create user
         user = User.objects.create_user(email=email,
@@ -50,11 +53,11 @@ class SignUpSerializer(serializers.Serializer):
                 slug=organization_name.lower().replace(" ", "-")
             )
 
-        # owner member
-        Membership.objects.create(
-            user=user,
-            organization=org,
-            role="OWNER"
-        )
+            # owner member
+            Membership.objects.create(
+                user=user,
+                organization=org,
+                role="OWNER"
+            )
 
         return user

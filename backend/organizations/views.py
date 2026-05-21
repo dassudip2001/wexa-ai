@@ -30,7 +30,6 @@ class InviteByEmail(APIView):
     def get(self, request):
         org = get_user_organization(request.user)
         invite = Invitation.objects.filter(
-            organization=org,
             email=request.user.email,
             accepted=False
         ).first()
@@ -44,6 +43,9 @@ class InviteByEmail(APIView):
             "organization": invite.organization.name
         })
 
+
+
+# accept invite
 class AcceptInviteView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, token):

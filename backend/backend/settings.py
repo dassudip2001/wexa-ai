@@ -28,7 +28,8 @@ SECRET_KEY = 'django-insecure-8q1+f&$jn+9j6&z995z*zm8pf=auva1i-b8o6bthaz(&_277ap
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*', 'http://localhost:3000', 'wexa-am85.onrender.com', 'https://wexa-ai-psi.vercel.app']
+ALLOWED_HOSTS = ['*', 'http://localhost:3000', 'wexa-am85.onrender.com', 'https://wexa-ai-psi.vercel.app',
+                 'https://wexa-ai.onrender.com']
 
 # Application definition
 
@@ -156,7 +157,8 @@ AUTHENTICATION_BACKENDS = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    'https://wexa-ai-psi.vercel.app'
+    'https://wexa-ai-psi.vercel.app',
+    'https://wexa-ai.onrender.com'
 ]
 CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
