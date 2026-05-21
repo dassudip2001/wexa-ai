@@ -1,10 +1,15 @@
 from django.urls import path, include
-from rest_framework.views import APIView
 
-from organizations.views import InviteUserView, AcceptInviteView,InviteByEmail
+from organizations.views import InviteUserView, AcceptInviteView, InviteByEmail, ApiListView, ApiCreateView, \
+    ApiDeleteView
 
 urlpatterns = [
     path("invite/", InviteUserView.as_view()),
-    path("invite-link/",InviteByEmail.as_view()),
-    path("accept/<str:token>", AcceptInviteView.as_view())
+    path("invite-link/", InviteByEmail.as_view()),
+    path("accept/<str:token>", AcceptInviteView.as_view()),
+
+    #     API
+    path("api-list/", ApiListView.as_view()),
+    path("api-create/", ApiCreateView.as_view()),
+    path("api-delete/", ApiDeleteView.as_view()),
 ]

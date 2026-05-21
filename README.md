@@ -3,10 +3,10 @@
 A full-stack web application featuring a modern React frontend (Next.js) and a robust Python backend (Django).
 <img width="485" height="727" alt="image" src="https://github.com/user-attachments/assets/f64d2e9e-8611-422d-aa1b-f9fb81ddaf43" />
 
-
 ## 🚀 Tech Stack
 
 ### Frontend
+
 - **Framework:** Next.js 16 (React 19)
 - **Styling:** Tailwind CSS v4, Shadcn UI
 - **State Management:** Zustand, React Query (@tanstack/react-query)
@@ -15,6 +15,7 @@ A full-stack web application featuring a modern React frontend (Next.js) and a r
 - **Package Manager:** Bun
 
 ### Backend
+
 - **Framework:** Django 6, Django REST Framework
 - **Asynchronous Tasks:** Celery, Redis
 - **Real-time:** Django Channels
@@ -75,5 +76,39 @@ A full-stack web application featuring a modern React frontend (Next.js) and a r
    bun run dev
    ```
 
+# Event create by api-key
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/events/ingest-api/ \
+-H "Content-Type: application/json" \
+-H "X-API-KEY: your_api_key_here" \
+-d '{
+    "event_name": "login",
+    "properties": {
+        "device": "mobile"
+    }
+}'
+```
+
+```bash
+{
+  "events": [
+    {
+      "event_name": "signup",
+      "properties": {
+        "plan": "pro"
+      }
+    },
+    {
+      "event_name": "purchase",
+      "properties": {
+        "amount": 500
+      }
+    }
+  ]
+}
+```
+
 ## 📝 License
+
 This project is licensed under the MIT License.
