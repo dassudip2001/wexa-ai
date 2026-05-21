@@ -17,37 +17,30 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/axios";
+import { ModalProps } from "../invite/InviteUser";
 
-export interface ModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  token?: string;
-}
-
-type Inputs = {
-  email: string;
+export type ApiKeyInput = {
+  name: string;
 };
 
-export default function InviteUserMOdel({ open, onOpenChange }: ModalProps) {
+export default function ApiKeyModel({ open, onOpenChange }: ModalProps) {
   const queryClient = useQueryClient();
-
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  } = useForm<ApiKeyInput>();
+  const onSubmit: SubmitHandler<ApiKeyInput> = async (data) => {
     mutation.mutate(data);
   };
-
   const mutation = useMutation({
-    mutationFn: async (data: Inputs) => {
-      const response = await api.post("/organizations/invite/", data);
+    mutationFn: async (data: ApiKeyInput) => {
+      const response = await api.post("/organizations/api-create/", data);
       return response.data;
     },
     onSuccess: () => {
       onOpenChange(false);
-      queryClient.invalidateQueries({ queryKey: ["invites"] });
+      queryClient.invalidateQueries({ queryKey: ["api-keys"] });
     },
   });
   return (
@@ -56,28 +49,28 @@ export default function InviteUserMOdel({ open, onOpenChange }: ModalProps) {
         <DialogContent className="sm:max-w-sm">
           <form onSubmit={handleSubmit(onSubmit)}>
             <DialogHeader>
-              <DialogTitle>Invite User</DialogTitle>
+              <DialogTitle>Create API Key</DialogTitle>
               <DialogDescription>
-                Invite a new user to your organization.
+                Create a new API key for your organization.
               </DialogDescription>
             </DialogHeader>
 
             <FieldGroup>
-              <Field>
-                <Label htmlFor="email-1">Email</Label>
+              <Field className="space-y-2">
+                <Label htmlFor="name-1">Name</Label>
 
                 <Input
-                  id="email-1"
-                  type="email"
-                  placeholder="Enter email"
-                  {...register("email", {
-                    required: "Email is required",
+                  id="name-1"
+                  type="text"
+                  placeholder="Enter name"
+                  {...register("name", {
+                    required: "Name is required",
                   })}
                 />
               </Field>
 
-              {errors.email && (
-                <span className="text-red-500">{errors.email.message}</span>
+              {errors.name && (
+                <span className="text-red-500">{errors.name.message}</span>
               )}
             </FieldGroup>
 
@@ -89,7 +82,7 @@ export default function InviteUserMOdel({ open, onOpenChange }: ModalProps) {
               </DialogClose>
 
               <Button type="submit" disabled={mutation.isPending}>
-                {mutation.isPending ? "Sending..." : "Invite"}
+                {mutation.isPending ? "Saving..." : "Save"}
               </Button>
             </DialogFooter>
           </form>

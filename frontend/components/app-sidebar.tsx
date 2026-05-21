@@ -46,18 +46,21 @@ const data = {
       icon: <Logs />,
     },
     {
+      name: "API Keys",
+      url: "/api-keys",
+      icon: <DatabaseIcon />,
+    },
+    {
       name: "Invites",
       url: "/invites",
       icon: <User2 />,
     },
-
   ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useUserStore();
-  console.log("sidebar",user);
-  
+  console.log("sidebar", user);
 
   const navUser = {
     name: user ? `${user.first_name} ${user.last_name}` : "User",

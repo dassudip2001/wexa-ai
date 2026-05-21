@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, XCircle, Loader2, Plus } from "lucide-react";
+import { CheckCircle, Loader2, Plus } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -23,7 +23,6 @@ import api from "@/lib/axios";
 import { useState } from "react";
 import InviteUserMOdel from "@/components/invite/InviteUser";
 import { useUserStore } from "@/store/userStore";
-import { usePermission } from "@/hooks/usePermission";
 import AcceptInviteModel from "@/components/invite/acceptInviteModel";
 
 interface InviteResponse {
@@ -96,18 +95,17 @@ export default function InvitesPage() {
                         ? "Pending Invite (Token)"
                         : "Pending Invite"}
                     </TableCell>
-                    <TableCell>
-                      {data.organization}
-                    </TableCell>
+                    <TableCell>{data.organization}</TableCell>
                     <TableCell>
                       <Badge variant="secondary">Pending</Badge>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         <Button
-                        onClick={() => {
-                          setToken(data.token as string);
-                          setOpenAccept(true)}}
+                          onClick={() => {
+                            setToken(data.token as string);
+                            setOpenAccept(true);
+                          }}
                           size="sm"
                           variant="outline"
                           className="text-green-600 hover:text-green-700 hover:bg-green-50 dark:hover:bg-green-950"
@@ -146,7 +144,11 @@ export default function InvitesPage() {
         <InviteUserMOdel open={openInvite} onOpenChange={setOpenInvite} />
       )}
       {openAccept && (
-        <AcceptInviteModel open={openAccept} onOpenChange={setOpenAccept} token={token as string} />
+        <AcceptInviteModel
+          open={openAccept}
+          onOpenChange={setOpenAccept}
+          token={token as string}
+        />
       )}
     </>
   );
