@@ -10,7 +10,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "../ui/dialog";
 import { Field, FieldGroup } from "../ui/field";
 import { Input } from "../ui/input";
