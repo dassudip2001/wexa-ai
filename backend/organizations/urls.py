@@ -11,5 +11,5 @@ urlpatterns = [
     #     API
     path("api-list/", ApiListView.as_view()),
     path("api-create/", ApiCreateView.as_view()),
-    path("api-delete/", ApiDeleteView.as_view()),
+    path("api-delete/<str:pk>", ApiDeleteView.as_view()),
 ]

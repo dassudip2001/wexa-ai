@@ -18,7 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2 } from "lucide-react";
+import Loader from "@/components/common/Loader";
 
 interface EventProperty {
   [key: string]: string | number | boolean;
@@ -32,7 +32,11 @@ interface EventData {
 }
 
 export default function EventsPage() {
-  const { data: events, isLoading, error } = useQuery<EventData[]>({
+  const {
+    data: events,
+    isLoading,
+    error,
+  } = useQuery<EventData[]>({
     queryKey: ["events"],
     queryFn: async () => {
       const response = await api.get("/events/");
@@ -41,11 +45,7 @@ export default function EventsPage() {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex h-[50vh] w-full items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <Loader />;
   }
 
   if (error) {
@@ -84,21 +84,28 @@ export default function EventsPage() {
                 events.map((event) => (
                   <TableRow key={event.id}>
                     <TableCell className="font-mono text-xs text-muted-foreground">
-                      {event.id.split('-')[0]}...
+                      {event.id.split("-")[0]}...
                     </TableCell>
                     <TableCell>
                       <Badge variant="secondary" className="capitalize">
-                        {event.event_name.replace(/_/g, ' ')}
+                        {event.event_name.replace(/_/g, " ")}
                       </Badge>
                     </TableCell>
                     <TableCell>
                       {Object.keys(event.properties || {}).length > 0 ? (
                         <div className="flex flex-wrap gap-1">
-                          {Object.entries(event.properties).map(([key, value]) => (
-                            <Badge key={key} variant="outline" className="text-xs font-normal">
-                              <span className="font-medium mr-1">{key}:</span> {String(value)}
-                            </Badge>
-                          ))}
+                          {Object.entries(event.properties).map(
+                            ([key, value]) => (
+                              <Badge
+                                key={key}
+                                variant="outline"
+                                className="text-xs font-normal"
+                              >
+                                <span className="font-medium mr-1">{key}:</span>{" "}
+                                {String(value)}
+                              </Badge>
+                            ),
+                          )}
                         </div>
                       ) : (
                         <span className="text-muted-foreground text-sm">-</span>
@@ -111,7 +118,10 @@ export default function EventsPage() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={4}
+                    className="h-24 text-center text-muted-foreground"
+                  >
                     No events found.
                   </TableCell>
                 </TableRow>

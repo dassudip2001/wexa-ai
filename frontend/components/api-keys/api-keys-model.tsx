@@ -10,7 +10,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "../ui/dialog";
 import { Field, FieldGroup } from "../ui/field";
 import { Input } from "../ui/input";
@@ -18,6 +17,7 @@ import { Label } from "../ui/label";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/axios";
 import { ModalProps } from "../invite/InviteUser";
+import { toast } from "sonner";
 
 export type ApiKeyInput = {
   name: string;
@@ -32,6 +32,7 @@ export default function ApiKeyModel({ open, onOpenChange }: ModalProps) {
   } = useForm<ApiKeyInput>();
   const onSubmit: SubmitHandler<ApiKeyInput> = async (data) => {
     mutation.mutate(data);
+    toast.success("API key created successfully!");
   };
   const mutation = useMutation({
     mutationFn: async (data: ApiKeyInput) => {

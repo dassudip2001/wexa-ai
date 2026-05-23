@@ -9,8 +9,26 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import api from "@/lib/axios";
+import { toast } from "sonner";
 
-export default function DeleteApiKeyModel({ open, onOpenChange }: ModalProps) {
+export default function DeleteApiKeyModel({
+  open,
+  onOpenChange,
+  token,
+}: ModalProps) {
+  const queryClient = useQueryClient();
+  const { isPending, mutate } = useMutation({
+    mutationFn: async () => {
+      await api.delete(`/organizations/api-delete/${token}`);
+      toast.success("API key deleted successfully!");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["api-keys"] });
+      onOpenChange(false);
+    },
+  });
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
@@ -22,12 +40,9 @@ export default function DeleteApiKeyModel({ open, onOpenChange }: ModalProps) {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button
-              className="w-full"
-              onClick={() => console.log("Delete API Key")}
-            >
+            <Button className="w-full" onClick={() => mutate()}>
               <CheckCircle className="w-4 h-4 mr-2" />
-              {/* {query.isPending ? "Loading..." : "Delete"} */}
+              {isPending ? "Loading..." : "Delete"}
             </Button>
           </DialogFooter>
         </DialogContent>

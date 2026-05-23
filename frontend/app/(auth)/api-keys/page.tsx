@@ -5,15 +5,13 @@ import { useQuery } from "@tanstack/react-query";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -24,6 +22,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import ApiKeyModel from "@/components/api-keys/api-keys-model";
+import Loader from "@/components/common/Loader";
+import DeleteApiKeyModel from "@/components/api-keys/delete-api-key-model";
 
 export interface ApiKey {
   id: string;
@@ -35,7 +35,9 @@ export interface ApiKey {
 }
 export default function ApiKeyView() {
   const [openDialog, setOpenDialog] = useState(false);
-  const { data } = useQuery<ApiKey[]>({
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [isDeleteId, setDeleteId] = useState<string | null>(null);
+  const { data, isLoading } = useQuery<ApiKey[]>({
     queryKey: ["api-keys"],
     queryFn: async () => {
       const res = await api.get("/organizations/api-list");
@@ -44,6 +46,10 @@ export default function ApiKeyView() {
   });
 
   console.log(data);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <>
@@ -69,6 +75,7 @@ export default function ApiKeyView() {
                   <TableHead>ID</TableHead>
                   <TableHead>Key</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>Created At</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -77,7 +84,7 @@ export default function ApiKeyView() {
                   data.map((api) => (
                     <TableRow key={api.id}>
                       <TableCell className="font-mono text-xs text-muted-foreground">
-                        {api.id.split("-")[0]}...
+                        {api.name}
                       </TableCell>
                       <TableCell>
                         <Badge variant="secondary" className="capitalize">
@@ -98,6 +105,17 @@ export default function ApiKeyView() {
                       <TableCell className="text-right text-muted-foreground text-sm">
                         {new Date(api.created_at).toLocaleString()}
                       </TableCell>
+                      <TableCell className="text-right">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            (setDeleteDialogOpen(true), setDeleteId(api.id));
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : (
@@ -117,6 +135,13 @@ export default function ApiKeyView() {
       </div>
       {openDialog && (
         <ApiKeyModel open={openDialog} onOpenChange={setOpenDialog} />
+      )}
+      {isDeleteDialogOpen && (
+        <DeleteApiKeyModel
+          open={isDeleteDialogOpen}
+          onOpenChange={setDeleteDialogOpen}
+          token={isDeleteId as string}
+        />
       )}
     </>
   );

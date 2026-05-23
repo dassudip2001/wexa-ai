@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Loader2, Plus } from "lucide-react";
+import { CheckCircle, Plus } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -24,6 +24,7 @@ import { useState } from "react";
 import InviteUserMOdel from "@/components/invite/InviteUser";
 import { useUserStore } from "@/store/userStore";
 import AcceptInviteModel from "@/components/invite/acceptInviteModel";
+import Loader from "@/components/common/Loader";
 
 interface InviteResponse {
   message?: string;
@@ -49,11 +50,7 @@ export default function InvitesPage() {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex h-[50vh] w-full items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <Loader />;
   }
 
   const hasInvite = !!data?.token;
