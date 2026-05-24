@@ -169,3 +169,16 @@ CELERY_BROKER_URL = os.getenv("REDIS_URL")
 CELERY_RESULT_BACKEND = "django-db"
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
+
+if DEBUG:
+    EMAIL_BACKEND="django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = os.getenv("MAILTRAP_HOST")
+    EMAIL_PORT = os.getenv("MAILTRAP_PORT")
+    EMAIL_HOST_USER = os.getenv("MAILTRAP_USERNAME")
+    EMAIL_HOST_PASSWORD = os.getenv("MAILTRAP_PASSWORD")
+    EMAIL_USE_TLS = True
+else:
+    EMAIL_BACKEND = "django_ses.SESBackend"
+    AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+    AWS_SES_REGION_NAME = os.getenv("AWS_SES_REGION_NAME")

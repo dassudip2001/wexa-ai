@@ -61,3 +61,21 @@ class SignUpSerializer(serializers.Serializer):
             )
 
         return user
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    organization = MembershipSerializer(
+        source="memberships",
+        many=True,
+        read_only=True
+    )
+
+    class Meta:
+        model=User
+        fields = [
+            "id",
+            "email",
+            "first_name",
+            "last_name",
+            "organization"
+        ]
