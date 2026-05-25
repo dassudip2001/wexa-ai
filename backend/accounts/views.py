@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 from django.shortcuts import render
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -7,6 +8,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from accounts.serializers import SignUpSerializer, MembershipSerializer, UserProfileSerializer
+from common.services.email_service import send_welcome_email
 from organizations.models import Membership
 
 User = get_user_model()
@@ -41,6 +43,9 @@ class SignUpView(APIView):
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
             })
+        send_welcome_email.delay(
+            user.email
+        )
         return Response(serializer.errors,status=400)
 
 
@@ -53,7 +58,7 @@ class SignUpView(APIView):
 #         memberships = Membership.objects.filter(
 #             user=user
 #         ).select_related("organization")
-# 
+#
 #         org_data = MembershipSerializer(
 #             memberships,
 #             many=True

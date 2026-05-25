@@ -1,0 +1,52 @@
+services:
+  backend:
+    container_name: backend
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+
+    ports:
+      - "5000:5000"
+    networks:
+      - db_network
+    depends_on:
+      - redis
+  redis:
+    container_name: redis_db
+    image: redis/redis-stack-server:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    environment:
+      # REDIS_PASSWORD: password
+      REDIS_PORT: 6379
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - db_network
+  celery:
+    container_name: celery
+    build: .
+    command: celery -A backend worker -l info
+    volumes:
+      - celery_data:/app
+    networks:
+      - db_network
+    depends_on:
+      redis:
+        condition: service_healthy
+networks:
+  db_network:
+    external: true
+
+volumes:
+  redis_data:
+    driver: local
+  celery_data:
+    driver: local
+
+

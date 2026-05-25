@@ -28,7 +28,8 @@ SECRET_KEY = 'django-insecure-8q1+f&$jn+9j6&z995z*zm8pf=auva1i-b8o6bthaz(&_277ap
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*', 'http://localhost:3000', 'wexa-am85.onrender.com', 'https://wexa-ai-psi.vercel.app',
+ALLOWED_HOSTS = ['*', "localhost",
+                 "127.0.0.1", 'http://localhost:3000', 'wexa-am85.onrender.com', 'https://wexa-ai-psi.vercel.app',
                  'https://wexa-ai.onrender.com']
 
 # Application definition
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     "alerts",
     "reports",
     "common",
+    # 'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -165,13 +167,23 @@ CSRF_TRUSTED_ORIGINS = [
     "https://wexa-am85.onrender.com",
 ]
 
-CELERY_BROKER_URL = os.getenv("REDIS_URL")
-CELERY_RESULT_BACKEND = "django-db"
+# CELERY_BROKER_URL = os.getenv("REDIS_URL")
+CELERY_BROKER_URL = os.getenv(
+    "REDIS_URL",
+    "redis://localhost:6379/0"
+)
+
+CELERY_RESULT_BACKEND = os.getenv(
+    "REDIS_URL",
+    "redis://localhost:6379/0"
+)
+# CELERY_RESULT_BACKEND = "django-db"
 CELERY_ACCEPT_CONTENT = ["json"]
+# CELERY_RESULT_BACKEND = os.getenv("REDIS_URL")
 CELERY_TASK_SERIALIZER = "json"
 
 if DEBUG:
-    EMAIL_BACKEND="django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = os.getenv("MAILTRAP_HOST")
     EMAIL_PORT = os.getenv("MAILTRAP_PORT")
     EMAIL_HOST_USER = os.getenv("MAILTRAP_USERNAME")
