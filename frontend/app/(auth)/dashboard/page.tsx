@@ -4,13 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import api from "@/lib/axios";
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import { SectionCards } from "@/components/section-cards";
-import { Loader2 } from "lucide-react";
 import { RecentActivityTable } from "@/components/recent-activity-table";
+import Loader from "@/components/common/Loader";
 
 export default function Page() {
   const {
     data: stats,
     isLoading,
+    isError,
     error,
   } = useQuery({
     queryKey: ["dashboardStats"],
@@ -25,17 +26,19 @@ export default function Page() {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <Loader />;
   }
 
-  if (error) {
+  if (isError) {
+    const errorMessage = (error as any)?.response?.data?.detail;
+
     return (
-      <div className="flex h-[50vh] w-full items-center justify-center text-destructive">
-        You are not part of any organization. Please contact your administrator.
+      <div className="flex h-[60vh] items-center justify-center px-4">
+        <div className="max-w-md rounded-2xl border bg-background p-8 text-center shadow-sm">
+          <h2 className="mb-2 text-xl font-semibold">No Organization Found</h2>
+
+          <p className="text-muted-foreground">{errorMessage}</p>
+        </div>
       </div>
     );
   }

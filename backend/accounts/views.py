@@ -38,15 +38,17 @@ class SignUpView(APIView):
         serializer=SignUpSerializer(data=request.data)
         if serializer.is_valid():
             user=serializer.save()
+            # mail send
+            send_welcome_email.delay(
+                user.email,
+                user.username
+            )
             refresh=RefreshToken.for_user(user)
             return Response({
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
             })
-        send_welcome_email.delay(
-            user.email,
-            user.username
-        )
+
         return Response(serializer.errors,status=400)
 
 
