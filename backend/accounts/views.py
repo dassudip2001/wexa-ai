@@ -44,7 +44,8 @@ class SignUpView(APIView):
                 "access": str(refresh.access_token),
             })
         send_welcome_email.delay(
-            user.email
+            user.email,
+            user.username
         )
         return Response(serializer.errors,status=400)
 
