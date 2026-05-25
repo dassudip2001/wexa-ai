@@ -8,13 +8,17 @@ import { Loader2 } from "lucide-react";
 import { RecentActivityTable } from "@/components/recent-activity-table";
 
 export default function Page() {
-  const { data: stats, isLoading, error } = useQuery({
+  const {
+    data: stats,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["dashboardStats"],
     queryFn: async () => {
       const response = await api.get("/dashboard/stats/");
       return response.data;
     },
-    
+
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     refetchInterval: 60000, // 1 minute
@@ -31,7 +35,7 @@ export default function Page() {
   if (error) {
     return (
       <div className="flex h-[50vh] w-full items-center justify-center text-destructive">
-        Failed to load dashboard data.
+        You are not part of any organization. Please contact your administrator.
       </div>
     );
   }
