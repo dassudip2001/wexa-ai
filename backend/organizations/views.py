@@ -29,15 +29,16 @@ class InviteUserView(APIView):
 # Get invite by emailId
 class InviteByEmail(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request):
         org = get_user_organization(request.user)
         invite = Invitation.objects.filter(
             email=request.user.email,
             accepted=False
         ).first()
-        print(".................",invite)
+        print(".................", invite)
         if not invite:
-            return Response({"message": "No invite available"}, status=200)
+            return Response({"message": "No invite available"}, status=status.HTTP_200_OK)
 
         return Response({
             "token": str(invite.token),
@@ -46,13 +47,13 @@ class InviteByEmail(APIView):
         })
 
 
-
 # accept invite
 class AcceptInviteView(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request, token):
         invite = Invitation.objects.get(token=token)
-        print(".............",invite)
+        print(".............", invite)
 
         Membership.objects.create(
             user=request.user,
@@ -66,13 +67,14 @@ class AcceptInviteView(APIView):
         return Response({"message": "Joined organization"})
 
 
-#GET-API
+# GET-API
 class ApiListView(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request):
         org = get_user_organization(request.user)
-        data=APIKey.objects.filter(organization=org
-        ).select_related('organization')
+        data = APIKey.objects.filter(organization=org
+                                     ).select_related('organization')
         serializer = ApiListSerializer(data, many=True)
         return Response(serializer.data)
 
@@ -80,23 +82,26 @@ class ApiListView(APIView):
 # CREATE -API
 class ApiCreateView(APIView):
     permission_classes = [IsAuthenticated]
-    def post(self,request):
-        org=get_user_organization(request.user)
-        api=APIKey.objects.create(
+
+    def post(self, request):
+        org = get_user_organization(request.user)
+        api = APIKey.objects.create(
             name=request.data['name'],
             organization=org
         )
         return Response({
 
-            "name":api.name,
-            "key":str(api.key),
-            "organization":api.organization.name
+            "name": api.name,
+            "key": str(api.key),
+            "organization": api.organization.name
         })
+
 
 # DELETE - API
 class ApiDeleteView(APIView):
     permission_classes = [IsAuthenticated]
-    def delete(self,request,pk):
-        data=get_object_or_404(APIKey,pk=pk)
+
+    def delete(self, request, pk):
+        data = get_object_or_404(APIKey, pk=pk)
         data.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
