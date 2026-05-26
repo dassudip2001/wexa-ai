@@ -1,10 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
 </head>
 <body>
+
+    <h2>Organization Invitation</h2>
+
+    <p>Hello,</p>
+
+    <p>
+        {{ inviter_name }} invited you to join
+        <strong>{{ organization_name }}</strong>.
+    </p>
+
+    <a href="{{ invite_link }}">
+        Accept Invitation
+    </a>
+
+    <p>
+        If the button does not work, copy this link:
+    </p>
+
+    <p>
+        {{ invite_link }}
+    </p>
 
 </body>
 </html>

@@ -1,9 +1,12 @@
+from django.conf import settings
 from django.shortcuts import render, get_object_or_404
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from common.services.invite_email import send_invite_email
+from common.services.accept_email import send_accept_email
 from organizations.models import Invitation, Membership, APIKey
 from organizations.permissions import IsAdminOrOwner
 from organizations.serializers import ApiListSerializer
@@ -16,12 +19,28 @@ class InviteUserView(APIView):
 
     def post(self, request):
         org = get_user_organization(request.user)
+        # check if already send
+        if Invitation.objects.filter(email=request.data["email"], organization=org).exists():
+            return Response({"message": "Invite already sent"}, status=status.HTTP_400_BAD_REQUEST)
+        if Membership.objects.filter(organization=org, user__email=request.data["email"]).exists():
+            return Response({"message": "User already member of this organization"},
+                            status=status.HTTP_400_BAD_REQUEST)
+        if not org:
+            return Response({"message": "Organization not found"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            invite = Invitation.objects.create(
+                email=request.data["email"],
+                role="VIEWER",
+                organization=org
+            )
 
-        invite = Invitation.objects.create(
-            email=request.data["email"],
-            role="VIEWER",
-            organization=org
-        )
+            invite_link = f"{settings.FRONTEND_URL}/accept-invite/{invite.token}"
+            send_invite_email.delay(
+                email=invite.email,
+                inviter_name=request.user.username,
+                organization_name=org.name,
+                invite_link=invite_link
+            )
 
         return Response({"invite_token": invite.token})
 
@@ -63,6 +82,11 @@ class AcceptInviteView(APIView):
 
         invite.accepted = True
         invite.save()
+        send_accept_email.delay(
+            email=request.user.email,
+            username=request.user.username,
+            organization_name=invite.organization.name
+        )
 
         return Response({"message": "Joined organization"})
 

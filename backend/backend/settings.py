@@ -182,6 +182,8 @@ CELERY_ACCEPT_CONTENT = ["json"]
 # CELERY_RESULT_BACKEND = os.getenv("REDIS_URL")
 CELERY_TASK_SERIALIZER = "json"
 
+FRONTEND_URL = os.getenv("FRONT_END_URL")
+
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = os.getenv("MAILTRAP_HOST")
