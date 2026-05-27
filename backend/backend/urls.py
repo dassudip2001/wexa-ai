@@ -23,5 +23,6 @@ urlpatterns = [
     path("api/events/", include("events.urls")),
     path("api/dashboard/", include("dashboards.urls")),
     path("api/organizations/", include("organizations.urls")),
-    path("api/heldth/",include("common.urls"))
+    path("api/heldth/",include("common.urls")),
+    path("api/alerts/", include("alerts.urls")),
 ]
